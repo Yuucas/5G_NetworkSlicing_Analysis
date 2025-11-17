@@ -1,0 +1,123 @@
+# Model Configuration for 5G Network Slicing System
+
+# Reinforcement Learning Configurations
+reinforcement_learning:
+  dqn:
+    state_dim: 10
+    action_dim: 5  # Discrete allocation levels: 0%, 25%, 50%, 75%, 100%
+    learning_rate: 0.0001
+    gamma: 0.99
+    epsilon_start: 1.0
+    epsilon_end: 0.01
+    epsilon_decay: 10000
+    batch_size: 128
+    buffer_capacity: 100000
+    target_update_freq: 1000
+    hidden_dims: [256, 256, 128]
+
+  ppo:
+    state_dim: 10
+    action_dim: 1  # Continuous allocation
+    learning_rate: 0.0003
+    gamma: 0.99
+    gae_lambda: 0.95
+    clip_epsilon: 0.2
+    value_coef: 0.5
+    entropy_coef: 0.01
+    max_grad_norm: 0.5
+    n_steps: 2048
+    n_epochs: 10
+    batch_size: 64
+
+  environment:
+    max_bandwidth: 1000.0  # Mbps
+    action_type: "discrete"  # or "continuous"
+    sla_violation_penalty: -10.0
+    overallocation_penalty: -5.0
+    efficiency_reward: 5.0
+    emergency_priority_bonus: 10.0
+
+# Deep Learning Configurations
+deep_learning:
+  lstm:
+    input_dim: 10
+    hidden_dim: 128
+    num_layers: 3
+    dropout: 0.2
+    bidirectional: true
+    sequence_length: 24
+    prediction_horizon: 1
+    learning_rate: 0.001
+    batch_size: 64
+    epochs: 100
+
+  transformer:
+    d_model: 128
+    nhead: 8
+    num_encoder_layers: 4
+    num_decoder_layers: 4
+    dim_feedforward: 512
+    dropout: 0.1
+    sequence_length: 24
+    learning_rate: 0.0001
+    batch_size: 32
+    epochs: 100
+    warmup_steps: 4000
+
+  tcn:
+    num_channels: [64, 128, 256]
+    kernel_size: 3
+    dropout: 0.2
+    sequence_length: 24
+    learning_rate: 0.001
+    batch_size: 64
+    epochs: 100
+
+# Optimization Configurations
+optimization:
+  nsga2:
+    population_size: 100
+    n_generations: 200
+    crossover_prob: 0.9
+    mutation_prob: 0.1
+
+  moead:
+    population_size: 100
+    n_generations: 200
+    n_neighbors: 20
+
+  objectives:
+    - minimize_latency
+    - maximize_bandwidth_efficiency
+    - maximize_qos_satisfaction
+    - minimize_cost
+
+# Ensemble Configurations
+ensemble:
+  method: "stacking"  # or "voting", "averaging"
+  models:
+    - dqn
+    - lstm
+    - transformer
+  meta_learner: "xgboost"
+
+# Training Configurations
+training:
+  epochs: 100
+  early_stopping_patience: 10
+  learning_rate_scheduler: "cosine"  # or "step", "exponential"
+  checkpoint_freq: 5
+  validation_freq: 1
+  log_freq: 100
+
+# Evaluation Metrics
+evaluation:
+  metrics:
+    - mse
+    - mae
+    - rmse
+    - r2_score
+    - sla_satisfaction_rate
+    - bandwidth_utilization
+    - latency_percentile_95
+    - fairness_index
