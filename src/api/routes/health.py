@@ -15,7 +15,7 @@ async def health_check() -> Dict[str, Any]:
     return {
         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat(),
-        "service": "5G Network Slicing API"
+        "service": "5G Network Slicing API",
     }
 
 
@@ -30,14 +30,11 @@ async def readiness_check() -> Dict[str, Any]:
             "models_loaded": True,  # Implement actual check
             "database_connected": True,  # Implement actual check
             "cache_connected": True,  # Implement actual check
-        }
+        },
     }
 
 
 @router.get("/live")
 async def liveness_check() -> Dict[str, Any]:
     """Liveness check for Kubernetes."""
-    return {
-        "alive": True,
-        "timestamp": datetime.utcnow().isoformat()
-    }
+    return {"alive": True, "timestamp": datetime.utcnow().isoformat()}

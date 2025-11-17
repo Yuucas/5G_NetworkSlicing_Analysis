@@ -8,7 +8,7 @@ import pytest
 try:
     from fastapi.testclient import TestClient
     from src.api.app import app
-    from src.api.routes import health, prediction, allocation, monitoring
+
     FASTAPI_AVAILABLE = True
 except ImportError:
     FASTAPI_AVAILABLE = False
@@ -78,11 +78,11 @@ class TestPredictionEndpoints:
                     "latency_ms": 30.0,
                     "required_bandwidth_mbps": 10.0,
                     "application_type": "Video_Call",
-                    "user_id": "User_1"
+                    "user_id": "User_1",
                 }
             ],
             "model_type": "dqn",
-            "horizon": 1
+            "horizon": 1,
         }
 
         response = client.post("/api/v1/predict/resource_demand", json=request_data)
@@ -96,8 +96,7 @@ class TestPredictionEndpoints:
     def test_forecast_bandwidth(self, client):
         """Test bandwidth forecasting endpoint."""
         response = client.post(
-            "/api/v1/predict/bandwidth_forecast",
-            params={"user_id": "User_1", "horizon_hours": 24}
+            "/api/v1/predict/bandwidth_forecast", params={"user_id": "User_1", "horizon_hours": 24}
         )
         assert response.status_code == 200
 
@@ -123,7 +122,7 @@ class TestAllocationEndpoints:
             "signal_strength_dbm": -75.0,
             "latency_ms": 30.0,
             "required_bandwidth_mbps": 10.0,
-            "priority": 7
+            "priority": 7,
         }
 
         response = client.post("/api/v1/allocate/request", json=request_data)
@@ -143,7 +142,7 @@ class TestAllocationEndpoints:
             "signal_strength_dbm": -70.0,
             "latency_ms": 10.0,
             "required_bandwidth_mbps": 2.0,
-            "priority": 10
+            "priority": 10,
         }
 
         response = client.post("/api/v1/allocate/request", json=request_data)

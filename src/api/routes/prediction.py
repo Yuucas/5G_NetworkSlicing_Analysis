@@ -12,6 +12,7 @@ router = APIRouter()
 
 class NetworkState(BaseModel):
     """Network state input for prediction."""
+
     signal_strength_dbm: float = Field(..., ge=-120, le=-30, description="Signal strength in dBm")
     latency_ms: float = Field(..., gt=0, description="Latency in milliseconds")
     required_bandwidth_mbps: float = Field(..., gt=0, description="Required bandwidth in Mbps")
@@ -22,6 +23,7 @@ class NetworkState(BaseModel):
 
 class PredictionRequest(BaseModel):
     """Request for resource allocation prediction."""
+
     network_states: List[NetworkState]
     model_type: str = Field(default="dqn", description="Model to use: dqn, lstm, transformer")
     horizon: int = Field(default=1, description="Prediction horizon in timesteps")
@@ -29,6 +31,7 @@ class PredictionRequest(BaseModel):
 
 class PredictionResponse(BaseModel):
     """Response with predicted resource allocations."""
+
     predictions: List[float]
     confidence_scores: Optional[List[float]] = None
     model_used: str
@@ -59,18 +62,14 @@ async def predict_resource_demand(request: PredictionRequest):
             predictions=predictions,
             confidence_scores=confidence_scores,
             model_used=request.model_type,
-            timestamp=datetime.utcnow()
+            timestamp=datetime.utcnow(),
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
 
 @router.post("/bandwidth_forecast")
-async def forecast_bandwidth(
-    user_id: str,
-    horizon_hours: int = 24,
-    model_type: str = "lstm"
-):
+async def forecast_bandwidth(user_id: str, horizon_hours: int = 24, model_type: str = "lstm"):
     """
     Forecast bandwidth demand for a specific user.
 
@@ -89,7 +88,7 @@ async def forecast_bandwidth(
             "horizon_hours": horizon_hours,
             "forecast": [10.5, 12.3, 15.1],  # Placeholder
             "model": model_type,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
         return forecast
     except Exception as e:

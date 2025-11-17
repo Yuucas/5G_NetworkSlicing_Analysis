@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class DataConfig:
     """Configuration for data loading and validation."""
+
     raw_data_path: str
     processed_data_path: Optional[str] = None
     test_size: float = 0.2
@@ -40,14 +41,28 @@ class QoSDataLoader:
     """
 
     EXPECTED_COLUMNS = [
-        "Timestamp", "User_ID", "Application_Type", "Signal_Strength",
-        "Latency", "Required_Bandwidth", "Allocated_Bandwidth", "Resource_Allocation"
+        "Timestamp",
+        "User_ID",
+        "Application_Type",
+        "Signal_Strength",
+        "Latency",
+        "Required_Bandwidth",
+        "Allocated_Bandwidth",
+        "Resource_Allocation",
     ]
 
     APPLICATION_TYPES = [
-        "Video_Call", "Voice_Call", "Streaming", "Emergency_Service",
-        "Online_Gaming", "Background_Download", "Web_Browsing",
-        "IoT_Temperature", "Video_Streaming", "File_Download", "VoIP_Call"
+        "Video_Call",
+        "Voice_Call",
+        "Streaming",
+        "Emergency_Service",
+        "Online_Gaming",
+        "Background_Download",
+        "Web_Browsing",
+        "IoT_Temperature",
+        "Video_Streaming",
+        "File_Download",
+        "VoIP_Call",
     ]
 
     def __init__(self, config: DataConfig):
@@ -110,7 +125,7 @@ class QoSDataLoader:
 
     def _validate_signal_strength(self) -> bool:
         """Validate signal strength values (should be negative dBm)."""
-        signal_col = self.data["Signal_Strength"].str.extract(r'(-?\d+)').astype(float)
+        signal_col = self.data["Signal_Strength"].str.extract(r"(-?\d+)").astype(float)
         valid = (signal_col >= -120).all().iloc[0] and (signal_col <= -30).all().iloc[0]
         if not valid:
             logger.warning("Signal strength values out of expected range [-120, -30] dBm")
@@ -118,7 +133,7 @@ class QoSDataLoader:
 
     def _validate_latency(self) -> bool:
         """Validate latency values."""
-        latency = self.data["Latency"].str.extract(r'(\d+)').astype(float)
+        latency = self.data["Latency"].str.extract(r"(\d+)").astype(float)
         valid = (latency > 0).all().iloc[0] and (latency < 1000).all().iloc[0]
         if not valid:
             logger.warning("Latency values out of expected range (0, 1000) ms")
@@ -135,7 +150,7 @@ class QoSDataLoader:
 
     def _validate_resource_allocation(self) -> bool:
         """Validate resource allocation percentage."""
-        allocation = self.data["Resource_Allocation"].str.rstrip('%').astype(float)
+        allocation = self.data["Resource_Allocation"].str.rstrip("%").astype(float)
         valid = (allocation >= 0).all() and (allocation <= 100).all()
         if not valid:
             logger.warning("Resource allocation out of range [0, 100]%")
@@ -156,9 +171,9 @@ class QoSDataLoader:
             raise ValueError("Data not loaded")
 
         # Parse numeric values
-        signal = self.data["Signal_Strength"].str.extract(r'(-?\d+)').astype(float).iloc[:, 0]
-        latency = self.data["Latency"].str.extract(r'(\d+)').astype(float).iloc[:, 0]
-        allocation = self.data["Resource_Allocation"].str.rstrip('%').astype(float)
+        signal = self.data["Signal_Strength"].str.extract(r"(-?\d+)").astype(float).iloc[:, 0]
+        latency = self.data["Latency"].str.extract(r"(\d+)").astype(float).iloc[:, 0]
+        allocation = self.data["Resource_Allocation"].str.rstrip("%").astype(float)
 
         stats = {
             "total_records": len(self.data),
@@ -187,8 +202,7 @@ class QoSDataLoader:
         return stats
 
     def split_data(
-        self,
-        stratify_col: Optional[str] = "Application_Type"
+        self, stratify_col: Optional[str] = "Application_Type"
     ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         """
         Split data into train, validation, and test sets.
@@ -228,7 +242,7 @@ class QoSDataLoader:
             self.data,
             test_size=self.config.test_size,
             random_state=self.config.random_seed,
-            stratify=stratify
+            stratify=stratify,
         )
 
         # Second split: train and val
@@ -245,11 +259,13 @@ class QoSDataLoader:
             train_val,
             test_size=val_size_adjusted,
             random_state=self.config.random_seed,
-            stratify=stratify_val
+            stratify=stratify_val,
         )
 
-        logger.info(f"Data split - Train: {len(self.train_data)}, "
-                   f"Val: {len(self.val_data)}, Test: {len(self.test_data)}")
+        logger.info(
+            f"Data split - Train: {len(self.train_data)}, "
+            f"Val: {len(self.val_data)}, Test: {len(self.test_data)}"
+        )
 
         return self.train_data, self.val_data, self.test_data
 

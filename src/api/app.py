@@ -21,7 +21,7 @@ app = FastAPI(
     description="AI-Driven Dynamic Resource Allocation for 5G Networks",
     version="0.1.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 # CORS middleware
@@ -54,8 +54,8 @@ async def root():
             "health": "/health",
             "prediction": "/api/v1/predict",
             "allocation": "/api/v1/allocate",
-            "monitoring": "/api/v1/monitor"
-        }
+            "monitoring": "/api/v1/monitor",
+        },
     }
 
 
@@ -84,10 +84,7 @@ async def http_exception_handler(request, exc):
     """Handle HTTP exceptions."""
     return JSONResponse(
         status_code=exc.status_code,
-        content={
-            "error": exc.detail,
-            "timestamp": datetime.utcnow().isoformat()
-        }
+        content={"error": exc.detail, "timestamp": datetime.utcnow().isoformat()},
     )
 
 
@@ -97,13 +94,11 @@ async def general_exception_handler(request, exc):
     logger.error(f"Unhandled exception: {exc}", exc_info=True)
     return JSONResponse(
         status_code=500,
-        content={
-            "error": "Internal server error",
-            "timestamp": datetime.utcnow().isoformat()
-        }
+        content={"error": "Internal server error", "timestamp": datetime.utcnow().isoformat()},
     )
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

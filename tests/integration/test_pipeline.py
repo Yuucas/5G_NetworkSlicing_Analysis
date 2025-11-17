@@ -4,7 +4,6 @@ Integration tests for complete pipelines.
 
 import pytest
 import numpy as np
-from pathlib import Path
 
 from src.data.data_loader import QoSDataLoader, DataConfig
 from src.data.preprocessing import QoSPreprocessor
@@ -13,6 +12,7 @@ from src.data.preprocessing import QoSPreprocessor
 try:
     from src.models.reinforcement_learning.environment import NetworkSlicingEnv
     from src.models.reinforcement_learning.dqn_agent import DQNAgent
+
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
@@ -43,8 +43,8 @@ class TestDataPipeline:
         train_processed = preprocessor.fit_transform(train)
 
         assert train_processed is not None
-        assert 'Signal_Strength_dBm' in train_processed.columns
-        assert 'Latency_ms' in train_processed.columns
+        assert "Signal_Strength_dBm" in train_processed.columns
+        assert "Latency_ms" in train_processed.columns
 
         # 5. Transform validation set
         val_processed = preprocessor.transform(val)
@@ -63,8 +63,8 @@ class TestDataPipeline:
 
         # Convert to numeric array
         numeric_cols = train_processed.select_dtypes(include=[np.number]).columns.tolist()
-        if 'Resource_Allocation_Pct' in numeric_cols:
-            numeric_cols.remove('Resource_Allocation_Pct')
+        if "Resource_Allocation_Pct" in numeric_cols:
+            numeric_cols.remove("Resource_Allocation_Pct")
 
         train_array = train_processed[numeric_cols].values
 
@@ -89,8 +89,8 @@ class TestTrainingPipeline:
         train_processed = preprocessor.fit_transform(train)
 
         numeric_cols = train_processed.select_dtypes(include=[np.number]).columns.tolist()
-        if 'Resource_Allocation_Pct' in numeric_cols:
-            numeric_cols.remove('Resource_Allocation_Pct')
+        if "Resource_Allocation_Pct" in numeric_cols:
+            numeric_cols.remove("Resource_Allocation_Pct")
 
         train_array = train_processed[numeric_cols].values
 
@@ -103,7 +103,9 @@ class TestTrainingPipeline:
     def test_agent_environment_interaction(self, sample_numeric_array):
         """Test agent interacting with environment."""
         # Create environment and agent
-        env = NetworkSlicingEnv(data=sample_numeric_array, action_type="discrete", n_discrete_actions=5)
+        env = NetworkSlicingEnv(
+            data=sample_numeric_array, action_type="discrete", n_discrete_actions=5
+        )
         agent = DQNAgent(state_dim=10, action_dim=5)
 
         # Run one episode
@@ -128,7 +130,9 @@ class TestTrainingPipeline:
 
     def test_mini_training_loop(self, sample_numeric_array):
         """Test a minimal training loop."""
-        env = NetworkSlicingEnv(data=sample_numeric_array, action_type="discrete", n_discrete_actions=5)
+        env = NetworkSlicingEnv(
+            data=sample_numeric_array, action_type="discrete", n_discrete_actions=5
+        )
         agent = DQNAgent(state_dim=10, action_dim=5, batch_size=4)
 
         # Train for 2 episodes
@@ -171,6 +175,7 @@ class TestSaveLoadPipeline:
 
         # Load back
         import pandas as pd
+
         train_loaded = pd.read_csv(output_dir / "train.csv")
         val_loaded = pd.read_csv(output_dir / "val.csv")
         test_loaded = pd.read_csv(output_dir / "test.csv")
@@ -192,7 +197,7 @@ class TestSaveLoadPipeline:
                 np.random.randint(0, 5),
                 np.random.randn(10),
                 np.random.randn(),
-                False
+                False,
             )
 
         # Save

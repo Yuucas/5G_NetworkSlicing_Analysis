@@ -2,7 +2,6 @@
 Unit tests for preprocessing module.
 """
 
-import pytest
 import pandas as pd
 import numpy as np
 
@@ -22,9 +21,7 @@ class TestQoSPreprocessor:
     def test_preprocessor_custom_config(self):
         """Test preprocessor with custom configuration."""
         preprocessor = QoSPreprocessor(
-            scaler_type="robust",
-            encode_categorical=False,
-            extract_time_features=False
+            scaler_type="robust", encode_categorical=False, extract_time_features=False
         )
         assert preprocessor.scaler_type == "robust"
         assert preprocessor.encode_categorical is False
@@ -44,48 +41,48 @@ class TestQoSPreprocessor:
         preprocessor = QoSPreprocessor()
         result = preprocessor.fit_transform(sample_qos_data)
 
-        assert 'Signal_Strength_dBm' in result.columns
-        assert 'Signal_Quality' in result.columns
-        assert 'Signal_Strength' not in result.columns
+        assert "Signal_Strength_dBm" in result.columns
+        assert "Signal_Quality" in result.columns
+        assert "Signal_Strength" not in result.columns
 
         # Check values are numeric
-        assert result['Signal_Strength_dBm'].dtype in [np.float64, np.float32, np.int64]
-        assert result['Signal_Quality'].dtype in [np.float64, np.float32]
+        assert result["Signal_Strength_dBm"].dtype in [np.float64, np.float32, np.int64]
+        assert result["Signal_Quality"].dtype in [np.float64, np.float32]
 
     def test_latency_parsing(self, sample_qos_data):
         """Test latency parsing."""
         preprocessor = QoSPreprocessor()
         result = preprocessor.fit_transform(sample_qos_data)
 
-        assert 'Latency_ms' in result.columns
-        assert 'Latency' not in result.columns
-        assert result['Latency_ms'].dtype in [np.float64, np.float32, np.int64]
+        assert "Latency_ms" in result.columns
+        assert "Latency" not in result.columns
+        assert result["Latency_ms"].dtype in [np.float64, np.float32, np.int64]
 
     def test_bandwidth_parsing(self, sample_qos_data):
         """Test bandwidth parsing and conversion."""
         preprocessor = QoSPreprocessor()
         result = preprocessor.fit_transform(sample_qos_data)
 
-        assert 'Required_Bandwidth_Mbps' in result.columns
-        assert 'Allocated_Bandwidth_Mbps' in result.columns
-        assert 'Bandwidth_Utilization' in result.columns
-        assert 'Is_Overallocated' in result.columns
+        assert "Required_Bandwidth_Mbps" in result.columns
+        assert "Allocated_Bandwidth_Mbps" in result.columns
+        assert "Bandwidth_Utilization" in result.columns
+        assert "Is_Overallocated" in result.columns
 
         # Check utilization is numeric (after scaling, can be negative)
-        assert result['Bandwidth_Utilization'].dtype in [np.float64, np.float32]
-        assert not result['Bandwidth_Utilization'].isna().any()
+        assert result["Bandwidth_Utilization"].dtype in [np.float64, np.float32]
+        assert not result["Bandwidth_Utilization"].isna().any()
 
     def test_resource_allocation_parsing(self, sample_qos_data):
         """Test resource allocation parsing."""
         preprocessor = QoSPreprocessor()
         result = preprocessor.fit_transform(sample_qos_data)
 
-        assert 'Resource_Allocation_Pct' in result.columns
-        assert 'Resource_Allocation' not in result.columns
+        assert "Resource_Allocation_Pct" in result.columns
+        assert "Resource_Allocation" not in result.columns
 
         # Check values are in valid range
-        assert (result['Resource_Allocation_Pct'] >= 0).all()
-        assert (result['Resource_Allocation_Pct'] <= 100).all()
+        assert (result["Resource_Allocation_Pct"] >= 0).all()
+        assert (result["Resource_Allocation_Pct"] <= 100).all()
 
     def test_time_feature_extraction(self, sample_qos_data):
         """Test time feature extraction."""
@@ -93,28 +90,32 @@ class TestQoSPreprocessor:
         result = preprocessor.fit_transform(sample_qos_data)
 
         expected_time_features = [
-            'Hour', 'DayOfWeek', 'DayOfMonth',
-            'Hour_Sin', 'Hour_Cos',
-            'DayOfWeek_Sin', 'DayOfWeek_Cos',
-            'Is_Peak_Hour'
+            "Hour",
+            "DayOfWeek",
+            "DayOfMonth",
+            "Hour_Sin",
+            "Hour_Cos",
+            "DayOfWeek_Sin",
+            "DayOfWeek_Cos",
+            "Is_Peak_Hour",
         ]
 
         for feature in expected_time_features:
             assert feature in result.columns
 
         # Check cyclical encoding bounds
-        assert (result['Hour_Sin'] >= -1).all() and (result['Hour_Sin'] <= 1).all()
-        assert (result['Hour_Cos'] >= -1).all() and (result['Hour_Cos'] <= 1).all()
+        assert (result["Hour_Sin"] >= -1).all() and (result["Hour_Sin"] <= 1).all()
+        assert (result["Hour_Cos"] >= -1).all() and (result["Hour_Cos"] <= 1).all()
 
     def test_categorical_encoding(self, sample_qos_data):
         """Test categorical encoding."""
         preprocessor = QoSPreprocessor(encode_categorical=True)
         result = preprocessor.fit_transform(sample_qos_data)
 
-        assert 'Application_Type_Encoded' in result.columns
-        assert 'User_ID_Encoded' in result.columns
-        assert 'Application_Type' not in result.columns
-        assert 'User_ID' not in result.columns
+        assert "Application_Type_Encoded" in result.columns
+        assert "User_ID_Encoded" in result.columns
+        assert "Application_Type" not in result.columns
+        assert "User_ID" not in result.columns
 
     def test_transform_consistency(self, sample_qos_data):
         """Test that transform uses fitted parameters."""
@@ -146,11 +147,7 @@ class TestTimeSeriesPreprocessor:
 
     def test_time_series_init(self):
         """Test TimeSeriesPreprocessor initialization."""
-        preprocessor = TimeSeriesPreprocessor(
-            sequence_length=10,
-            prediction_horizon=1,
-            stride=1
-        )
+        preprocessor = TimeSeriesPreprocessor(sequence_length=10, prediction_horizon=1, stride=1)
         assert preprocessor.sequence_length == 10
         assert preprocessor.prediction_horizon == 1
         assert preprocessor.stride == 1
@@ -160,9 +157,7 @@ class TestTimeSeriesPreprocessor:
         preprocessor = TimeSeriesPreprocessor(sequence_length=5, prediction_horizon=1)
 
         X, y = preprocessor.create_sequences(
-            processed_data,
-            target_col='Resource_Allocation_Pct',
-            group_by=None
+            processed_data, target_col="Resource_Allocation_Pct", group_by=None
         )
 
         assert isinstance(X, np.ndarray)
@@ -176,9 +171,7 @@ class TestTimeSeriesPreprocessor:
         preprocessor = TimeSeriesPreprocessor(sequence_length=seq_len)
 
         X, y = preprocessor.create_sequences(
-            processed_data,
-            target_col='Resource_Allocation_Pct',
-            group_by=None
+            processed_data, target_col="Resource_Allocation_Pct", group_by=None
         )
 
         # X should be (num_sequences, seq_len, num_features)

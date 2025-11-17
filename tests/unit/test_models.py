@@ -8,9 +8,9 @@ import numpy as np
 # Only import if dependencies available
 try:
     import torch
-    import gymnasium as gym
     from src.models.reinforcement_learning.environment import NetworkSlicingEnv
     from src.models.reinforcement_learning.dqn_agent import DQNAgent, DQNNetwork, ReplayBuffer
+
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
@@ -26,7 +26,7 @@ class TestNetworkSlicingEnv:
             data=sample_numeric_array,
             max_bandwidth=1000.0,
             action_type="discrete",
-            n_discrete_actions=5
+            n_discrete_actions=5,
         )
 
         assert env.max_steps == len(sample_numeric_array)
@@ -230,11 +230,7 @@ class TestDQNAgent:
     def test_agent_epsilon_decay(self):
         """Test epsilon decay."""
         agent = DQNAgent(
-            state_dim=10,
-            action_dim=5,
-            epsilon_start=1.0,
-            epsilon_end=0.01,
-            epsilon_decay=100
+            state_dim=10, action_dim=5, epsilon_start=1.0, epsilon_end=0.01, epsilon_decay=100
         )
 
         initial_epsilon = agent._get_epsilon()

@@ -66,21 +66,13 @@ class NetworkSlicingEnv(gym.Env):
 
         # Observation space
         self.observation_space = spaces.Box(
-            low=-np.inf,
-            high=np.inf,
-            shape=(self.state_dim,),
-            dtype=np.float32
+            low=-np.inf, high=np.inf, shape=(self.state_dim,), dtype=np.float32
         )
 
         # Action space
         if action_type == "continuous":
             # Continuous allocation percentage [0, 1]
-            self.action_space = spaces.Box(
-                low=0.0,
-                high=1.0,
-                shape=(1,),
-                dtype=np.float32
-            )
+            self.action_space = spaces.Box(low=0.0, high=1.0, shape=(1,), dtype=np.float32)
         elif action_type == "discrete":
             # Discrete allocation levels
             self.action_space = spaces.Discrete(n_discrete_actions)
@@ -101,9 +93,7 @@ class NetworkSlicingEnv(gym.Env):
         self.efficiency_scores = []
 
     def reset(
-        self,
-        seed: Optional[int] = None,
-        options: Optional[Dict[str, Any]] = None
+        self, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """Reset the environment to initial state."""
         super().reset(seed=seed)
@@ -121,10 +111,7 @@ class NetworkSlicingEnv(gym.Env):
 
         return self.current_state, info
 
-    def step(
-        self,
-        action: np.ndarray
-    ) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
+    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         """
         Execute one step in the environment.
 
@@ -155,7 +142,7 @@ class NetworkSlicingEnv(gym.Env):
             allocated_bw=allocated_bw,
             app_type=app_type,
             latency=latency,
-            allocation_pct=allocation_pct
+            allocation_pct=allocation_pct,
         )
 
         self.episode_reward += reward
@@ -185,18 +172,21 @@ class NetworkSlicingEnv(gym.Env):
 
         request = self._get_current_request()
 
-        state = np.array([
-            request["signal_quality"],
-            request["latency"],
-            request["required_bandwidth"],
-            request.get("current_allocated", 0.0),
-            request["application_type"],
-            request["hour_sin"],
-            request["hour_cos"],
-            request["dow_sin"],
-            request["dow_cos"],
-            self.total_allocated / self.max_bandwidth,  # Network load
-        ], dtype=np.float32)
+        state = np.array(
+            [
+                request["signal_quality"],
+                request["latency"],
+                request["required_bandwidth"],
+                request.get("current_allocated", 0.0),
+                request["application_type"],
+                request["hour_sin"],
+                request["hour_cos"],
+                request["dow_sin"],
+                request["dow_cos"],
+                self.total_allocated / self.max_bandwidth,  # Network load
+            ],
+            dtype=np.float32,
+        )
 
         return state
 
@@ -248,7 +238,7 @@ class NetworkSlicingEnv(gym.Env):
         allocated_bw: float,
         app_type: int,
         latency: float,
-        allocation_pct: float
+        allocation_pct: float,
     ) -> float:
         """
         Calculate reward for current allocation decision.

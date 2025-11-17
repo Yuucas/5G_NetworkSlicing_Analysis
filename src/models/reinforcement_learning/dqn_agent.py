@@ -13,29 +13,20 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-Transition = namedtuple('Transition', ('state', 'action', 'next_state', 'reward', 'done'))
+Transition = namedtuple("Transition", ("state", "action", "next_state", "reward", "done"))
 
 
 class DQNNetwork(nn.Module):
     """Deep Q-Network architecture."""
 
-    def __init__(
-        self,
-        state_dim: int,
-        action_dim: int,
-        hidden_dims: List[int] = [256, 256, 128]
-    ):
+    def __init__(self, state_dim: int, action_dim: int, hidden_dims: List[int] = [256, 256, 128]):
         super(DQNNetwork, self).__init__()
 
         layers = []
         input_dim = state_dim
 
         for hidden_dim in hidden_dims:
-            layers.extend([
-                nn.Linear(input_dim, hidden_dim),
-                nn.ReLU(),
-                nn.Dropout(0.2)
-            ])
+            layers.extend([nn.Linear(input_dim, hidden_dim), nn.ReLU(), nn.Dropout(0.2)])
             input_dim = hidden_dim
 
         layers.append(nn.Linear(input_dim, action_dim))
@@ -87,7 +78,7 @@ class DQNAgent:
         batch_size: int = 128,
         buffer_capacity: int = 100000,
         target_update_freq: int = 1000,
-        device: str = "cuda" if torch.cuda.is_available() else "cpu"
+        device: str = "cuda" if torch.cuda.is_available() else "cpu",
     ):
         self.state_dim = state_dim
         self.action_dim = action_dim
@@ -143,17 +134,13 @@ class DQNAgent:
 
     def _get_epsilon(self) -> float:
         """Calculate current epsilon value with decay."""
-        epsilon = self.epsilon_end + (self.epsilon_start - self.epsilon_end) * \
-                  np.exp(-1.0 * self.steps_done / self.epsilon_decay)
+        epsilon = self.epsilon_end + (self.epsilon_start - self.epsilon_end) * np.exp(
+            -1.0 * self.steps_done / self.epsilon_decay
+        )
         return epsilon
 
     def store_transition(
-        self,
-        state: np.ndarray,
-        action: int,
-        next_state: np.ndarray,
-        reward: float,
-        done: bool
+        self, state: np.ndarray, action: int, next_state: np.ndarray, reward: float, done: bool
     ) -> None:
         """Store transition in replay buffer."""
         self.memory.push(state, action, next_state, reward, done)
@@ -208,23 +195,26 @@ class DQNAgent:
 
     def save(self, path: str) -> None:
         """Save agent checkpoint."""
-        torch.save({
-            'policy_net_state_dict': self.policy_net.state_dict(),
-            'target_net_state_dict': self.target_net.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'steps_done': self.steps_done,
-            'losses': self.losses,
-            'rewards': self.rewards,
-        }, path)
+        torch.save(
+            {
+                "policy_net_state_dict": self.policy_net.state_dict(),
+                "target_net_state_dict": self.target_net.state_dict(),
+                "optimizer_state_dict": self.optimizer.state_dict(),
+                "steps_done": self.steps_done,
+                "losses": self.losses,
+                "rewards": self.rewards,
+            },
+            path,
+        )
         logger.info(f"DQN agent saved to {path}")
 
     def load(self, path: str) -> None:
         """Load agent checkpoint."""
         checkpoint = torch.load(path, map_location=self.device)
-        self.policy_net.load_state_dict(checkpoint['policy_net_state_dict'])
-        self.target_net.load_state_dict(checkpoint['target_net_state_dict'])
-        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-        self.steps_done = checkpoint['steps_done']
-        self.losses = checkpoint['losses']
-        self.rewards = checkpoint['rewards']
+        self.policy_net.load_state_dict(checkpoint["policy_net_state_dict"])
+        self.target_net.load_state_dict(checkpoint["target_net_state_dict"])
+        self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        self.steps_done = checkpoint["steps_done"]
+        self.losses = checkpoint["losses"]
+        self.rewards = checkpoint["rewards"]
         logger.info(f"DQN agent loaded from {path}")

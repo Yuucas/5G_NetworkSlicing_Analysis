@@ -13,6 +13,7 @@ router = APIRouter()
 
 class ApplicationType(str, Enum):
     """Application types for network slicing."""
+
     VIDEO_CALL = "Video_Call"
     VOICE_CALL = "Voice_Call"
     STREAMING = "Streaming"
@@ -28,6 +29,7 @@ class ApplicationType(str, Enum):
 
 class AllocationRequest(BaseModel):
     """Request for resource allocation."""
+
     user_id: str
     application_type: ApplicationType
     signal_strength_dbm: float = Field(..., ge=-120, le=-30)
@@ -38,6 +40,7 @@ class AllocationRequest(BaseModel):
 
 class AllocationResponse(BaseModel):
     """Response with allocated resources."""
+
     user_id: str
     allocated_bandwidth_mbps: float
     allocation_percentage: float
@@ -72,7 +75,9 @@ async def allocate_resources(request: AllocationRequest):
             priority_level = 10
             qos = "EXCELLENT"
         else:
-            allocated = min(base_allocation * priority_multiplier, request.required_bandwidth_mbps * 1.5)
+            allocated = min(
+                base_allocation * priority_multiplier, request.required_bandwidth_mbps * 1.5
+            )
             priority_level = request.priority
             qos = "GOOD" if allocated >= request.required_bandwidth_mbps else "FAIR"
 
@@ -84,7 +89,7 @@ async def allocate_resources(request: AllocationRequest):
             allocation_percentage=round(allocation_pct, 2),
             priority_level=priority_level,
             estimated_qos=qos,
-            timestamp=datetime.utcnow()
+            timestamp=datetime.utcnow(),
         )
 
     except Exception as e:
@@ -111,7 +116,7 @@ async def batch_allocate_resources(requests: List[AllocationRequest]):
         return {
             "allocations": allocations,
             "total_requests": len(requests),
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Batch allocation failed: {str(e)}")
@@ -134,14 +139,14 @@ async def optimize_network_resources():
                 "latency_minimization": 12.5,
                 "bandwidth_efficiency": 0.92,
                 "qos_satisfaction": 0.96,
-                "cost_minimization": 0.85
+                "cost_minimization": 0.85,
             },
             "best_solution": {
                 "total_allocated_bandwidth": 850.5,
                 "avg_latency_ms": 15.3,
-                "sla_satisfaction_rate": 0.97
+                "sla_satisfaction_rate": 0.97,
             },
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
         return optimization_results
     except Exception as e:

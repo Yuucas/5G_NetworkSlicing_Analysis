@@ -4,8 +4,6 @@ Unit tests for data loader module.
 
 import pytest
 import pandas as pd
-import numpy as np
-from pathlib import Path
 
 from src.data.data_loader import QoSDataLoader, DataConfig, load_qos_data
 
@@ -23,12 +21,7 @@ class TestDataConfig:
 
     def test_config_custom_values(self):
         """Test DataConfig with custom values."""
-        config = DataConfig(
-            raw_data_path="data.csv",
-            test_size=0.3,
-            val_size=0.15,
-            random_seed=123
-        )
+        config = DataConfig(raw_data_path="data.csv", test_size=0.3, val_size=0.15, random_seed=123)
         assert config.test_size == 0.3
         assert config.val_size == 0.15
         assert config.random_seed == 123
@@ -91,28 +84,27 @@ class TestQoSDataLoader:
 
         stats = loader.get_statistics()
 
-        assert 'total_records' in stats
-        assert 'unique_users' in stats
-        assert 'application_distribution' in stats
-        assert 'signal_strength' in stats
-        assert 'latency' in stats
-        assert 'resource_allocation' in stats
+        assert "total_records" in stats
+        assert "unique_users" in stats
+        assert "application_distribution" in stats
+        assert "signal_strength" in stats
+        assert "latency" in stats
+        assert "resource_allocation" in stats
 
-        assert stats['total_records'] == 10
-        assert stats['unique_users'] == 10
+        assert stats["total_records"] == 10
+        assert stats["unique_users"] == 10
 
     def test_split_data(self, sample_csv_file):
         """Test data splitting."""
         config = DataConfig(
-            raw_data_path=sample_csv_file,
-            test_size=0.2,
-            val_size=0.1,
-            random_seed=42
+            raw_data_path=sample_csv_file, test_size=0.2, val_size=0.1, random_seed=42
         )
         loader = QoSDataLoader(config)
         loader.load_data()
 
-        train, val, test = loader.split_data(stratify_col=None)  # No stratification for small dataset
+        train, val, test = loader.split_data(
+            stratify_col=None
+        )  # No stratification for small dataset
 
         assert len(train) > 0
         assert len(val) > 0
