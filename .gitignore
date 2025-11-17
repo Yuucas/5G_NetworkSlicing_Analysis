@@ -54,7 +54,7 @@ checkpoints/
 *.ckpt
 
 # Data
-data/raw/*
+# data/raw/*
 data/processed/*
 data/interim/*
 !data/raw/.gitkeep

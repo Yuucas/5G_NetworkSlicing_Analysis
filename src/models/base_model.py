@@ -4,7 +4,6 @@ Base model class for all ML/DL models.
 
 import logging
 from abc import ABC, abstractmethod
-from pathlib import Path
 from typing import Any, Dict, Optional
 
 import numpy as np
