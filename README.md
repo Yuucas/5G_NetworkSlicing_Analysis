@@ -192,8 +192,7 @@ An advanced AI-driven platform for intelligent 5G network resource allocation us
 ├── setup.py                       # Package setup
 ├── pyproject.toml                # Project metadata
 ├── docker-compose.yml            # Docker composition
-├── Makefile                      # Build automation
-└── .env.example                  # Environment variables template
+└── Makefile                      # Build automation
 ```
 
 ## Tech Stack
@@ -239,11 +238,11 @@ cd 5G_NetworkSlicing_Analysis
 
 # Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  
 
 # Install dependencies
 pip install -r requirements.txt
-pip install -e .  # Install in editable mode
+pip install -e .  
 ```
 
 ### Running the System
