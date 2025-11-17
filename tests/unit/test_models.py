@@ -2,14 +2,15 @@
 Unit tests for model modules.
 """
 
-import pytest
 import numpy as np
+import pytest
 
 # Only import if dependencies available
 try:
     import torch
-    from src.models.reinforcement_learning.environment import NetworkSlicingEnv
+
     from src.models.reinforcement_learning.dqn_agent import DQNAgent, DQNNetwork, ReplayBuffer
+    from src.models.reinforcement_learning.environment import NetworkSlicingEnv
 
     TORCH_AVAILABLE = True
 except ImportError:

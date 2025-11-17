@@ -2,16 +2,16 @@
 Integration tests for complete pipelines.
 """
 
-import pytest
 import numpy as np
+import pytest
 
-from src.data.data_loader import QoSDataLoader, DataConfig
+from src.data.data_loader import DataConfig, QoSDataLoader
 from src.data.preprocessing import QoSPreprocessor
 
 # Conditional imports
 try:
-    from src.models.reinforcement_learning.environment import NetworkSlicingEnv
     from src.models.reinforcement_learning.dqn_agent import DQNAgent
+    from src.models.reinforcement_learning.environment import NetworkSlicingEnv
 
     TORCH_AVAILABLE = True
 except ImportError:

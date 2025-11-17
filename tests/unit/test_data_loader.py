@@ -2,10 +2,10 @@
 Unit tests for data loader module.
 """
 
-import pytest
 import pandas as pd
+import pytest
 
-from src.data.data_loader import QoSDataLoader, DataConfig, load_qos_data
+from src.data.data_loader import DataConfig, QoSDataLoader, load_qos_data
 
 
 class TestDataConfig:

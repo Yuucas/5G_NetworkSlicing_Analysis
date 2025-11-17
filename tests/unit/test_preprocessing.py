@@ -2,8 +2,8 @@
 Unit tests for preprocessing module.
 """
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from src.data.preprocessing import QoSPreprocessor, TimeSeriesPreprocessor
 

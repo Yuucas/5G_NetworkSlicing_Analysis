@@ -7,6 +7,7 @@ import pytest
 # Only import if FastAPI available
 try:
     from fastapi.testclient import TestClient
+
     from src.api.app import app
 
     FASTAPI_AVAILABLE = True

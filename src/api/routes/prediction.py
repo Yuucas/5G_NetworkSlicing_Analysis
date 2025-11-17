@@ -2,10 +2,11 @@
 Prediction endpoints for resource demand forecasting.
 """
 
+from datetime import datetime
+from typing import List, Optional
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
-from typing import List, Optional
-from datetime import datetime
 
 router = APIRouter()
 

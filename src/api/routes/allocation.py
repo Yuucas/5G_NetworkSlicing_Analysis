@@ -2,11 +2,12 @@
 Resource allocation endpoints.
 """
 
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field
-from typing import List, Dict, Optional
 from datetime import datetime
 from enum import Enum
+from typing import Dict, List, Optional
+
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
 
 router = APIRouter()
 

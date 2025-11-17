@@ -2,16 +2,17 @@
 FastAPI Application for 5G Network Slicing and Resource Allocation.
 """
 
-from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
+import logging
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
-from typing import List, Dict, Optional, Any
-import numpy as np
-from datetime import datetime
-import logging
 
-from src.api.routes import prediction, allocation, monitoring, health
+from src.api.routes import allocation, health, monitoring, prediction
 
 logger = logging.getLogger(__name__)
 

@@ -2,11 +2,12 @@
 Custom Gym environment for 5G Network Resource Allocation.
 """
 
-import gymnasium as gym
-from gymnasium import spaces
-import numpy as np
-from typing import Dict, Tuple, Optional, Any
 import logging
+from typing import Any, Dict, Optional, Tuple
+
+import gymnasium as gym
+import numpy as np
+from gymnasium import spaces
 
 logger = logging.getLogger(__name__)
 

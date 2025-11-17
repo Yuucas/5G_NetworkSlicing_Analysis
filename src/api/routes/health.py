@@ -2,9 +2,10 @@
 Health check endpoints.
 """
 
-from fastapi import APIRouter
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any, Dict
+
+from fastapi import APIRouter
 
 router = APIRouter()
 

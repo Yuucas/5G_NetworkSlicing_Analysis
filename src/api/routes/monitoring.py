@@ -2,10 +2,11 @@
 Monitoring and metrics endpoints.
 """
 
-from fastapi import APIRouter
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
 import random
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter
 
 router = APIRouter()
 

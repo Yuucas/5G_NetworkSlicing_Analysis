@@ -2,11 +2,12 @@
 Base model class for all ML/DL models.
 """
 
-from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
-import numpy as np
-from pathlib import Path
 import logging
+from abc import ABC, abstractmethod
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 

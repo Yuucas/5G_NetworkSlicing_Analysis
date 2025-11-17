@@ -2,14 +2,15 @@
 Deep Q-Network (DQN) Agent for Network Resource Allocation.
 """
 
+import logging
+import random
+from collections import deque, namedtuple
+from typing import List, Optional, Tuple
+
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import numpy as np
-from collections import deque, namedtuple
-import random
-from typing import Tuple, List, Optional
-import logging
 
 logger = logging.getLogger(__name__)
 

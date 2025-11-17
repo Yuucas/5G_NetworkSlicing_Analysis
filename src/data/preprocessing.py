@@ -2,11 +2,12 @@
 Data preprocessing and transformation for 5G QoS data.
 """
 
-import pandas as pd
-import numpy as np
-from typing import Dict, List, Optional, Tuple
-from sklearn.preprocessing import StandardScaler, RobustScaler, LabelEncoder
 import logging
+from typing import Dict, List, Optional, Tuple
+
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, RobustScaler, StandardScaler
 
 logger = logging.getLogger(__name__)
 
